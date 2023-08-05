@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import useScrollTrigger from "@mui/material/useScrollTrigger";
 import { Box, Fab, styled, useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import Logo from "../../assets/pokeball.png";
+import Logo from "../../assets/Logo.png";
 
 interface Props {
   window?: () => Window;
@@ -48,19 +48,18 @@ export default function ElevateAppBar() {
             bgcolor: "#fff",
             color: theme.palette.text.primary,
             boxShadow: "initial",
-            height: 60
+            height: 70
           }}
         >
           <Toolbar sx={{ justifyContent: "center" }}>
-            <Typography variant="h5" sx={{ fontWeight: 600, mb: 1 }}>
-              TCG MARKETPLACE
+            <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2, mt: 1 }}>
+              TCG Marketplace
             </Typography>
             <StyledFab size="small" onClick={()=>{navigate('/')}}>
               <Box
                 component="img"
                 sx={{
-                  height: 40,
-                  ml: '2px'
+                  
                 }}
                 alt="MyLogo"
                 src={Logo}

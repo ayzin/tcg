@@ -1,7 +1,6 @@
-export type Search<T, D> = {
-  page: number;
-  rows: number;
-  total_rows: number;
-  filter: T;
-  datas: Array<D>;
+export type Search = {
+  page?: number;
+  pageSize?: number;
+  q?: string;
+  orderBy?: string;
 };
