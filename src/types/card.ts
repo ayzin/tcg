@@ -23,6 +23,7 @@ export type CardInfo = {
   images: CardImages;
   tcgplayer: TcgPlayer;
   cardmarket: CardMarket;
+  quantity?: number;
 };
 
 export type Abilities = {

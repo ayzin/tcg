@@ -7,13 +7,14 @@ import { fetchCards } from "services/api/card";
 import Cards from "../components/Cards";
 import { Search } from "types/common/search";
 import FloatingButton from "layout/Footer/FloatingButton";
+import { useCardContext } from "context/CardContext";
+// import { CartContext } from "context/CartContext";
 
 export const HomePage = () => {
   const [cards, setCards] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
-  // const [index, setIndex] = useState(1);
   const [pageSize, setPageSize] = useState(9);
-
+  const { setCardsInfo } = useCardContext();
   const CardList = useMutation({
     mutationFn: (params: Search) => fetchCards(params),
     onSuccess: (data) => {
@@ -24,6 +25,7 @@ export const HomePage = () => {
         if (i < numberOfItems) moreCardInfo.push(data.data[i]);
       }
       setCards(data.data);
+      setCardsInfo(data.data);
       setLoading(false);
     },
   });

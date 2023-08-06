@@ -8,6 +8,8 @@ import { Container, createTheme, ThemeProvider } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import ElevateAppBar from "layout/Header/Header";
 import { Route, Routes } from "react-router-dom";
+import { CartContextProvider } from "context/CartContext";
+import { CardContextProvider } from "context/CardContext";
 
 const THEME = createTheme({
   typography: {
@@ -17,6 +19,9 @@ const THEME = createTheme({
     fontWeightRegular: 400,
     fontWeightMedium: 500,
     fontWeightBold: 700,
+    button: {
+      textTransform: 'none'
+    }
   },
 });
 
@@ -25,18 +30,21 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <React.Fragment>
-      <ThemeProvider theme={THEME}>
-        <CssBaseline />
-        <ElevateAppBar />
-        <QueryClientProvider client={queryClient}>
-          <Container>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-            </Routes>
-          </Container>
-          
-        </QueryClientProvider>
-      </ThemeProvider>
+      <CardContextProvider>
+        <CartContextProvider>
+          <ThemeProvider theme={THEME}>
+            <CssBaseline />
+            <ElevateAppBar />
+            <QueryClientProvider client={queryClient}>
+              <Container>
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                </Routes>
+              </Container>
+            </QueryClientProvider>
+          </ThemeProvider>
+        </CartContextProvider>
+      </CardContextProvider>
     </React.Fragment>
   );
 }
