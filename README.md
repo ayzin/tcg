@@ -1,12 +1,9 @@
 ## How to run the project?
 
 1. Node.js is required to install in the machine.
-2. Copy this url https://github.com/ayzin/tcg.git and run this cmd line in the terminal
-  ### `git clone https://github.com/ayzin/tcg.git` 
-3. Change the terminal route to project destination. And if the machine hasn't installed yarn yet, please run this commnd line 
- ### `npm install --global yarn`
-4. run
-### `yarn install`
+2. Copy this url https://github.com/ayzin/tcg.git and run this cmd line in the terminal `git clone https://github.com/ayzin/tcg.git` 
+3. Change the terminal route to project destination. And if the machine hasn't installed yarn yet, please run this commnd line  `npm install --global yarn`
+4. run `yarn install`
 5 run `yarn start` & the project will be run on localhost:3000
 
 
