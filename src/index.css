@@ -32,3 +32,8 @@ input[type="search"] {
 .MuiOutlinedInput-notchedOutline {
   border-color: transparent !important;
 }
+
+.MuiDialogActions-root {
+  background-color: transparent !important;
+}
+

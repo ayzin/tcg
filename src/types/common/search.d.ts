@@ -1,6 +1,9 @@
 export type Search = {
   page?: number;
   pageSize?: number;
-  q?: string;
+  name?: string;
+  setId?: string;
+  type?:string;
+  rarity?: string;
   orderBy?: string;
 };

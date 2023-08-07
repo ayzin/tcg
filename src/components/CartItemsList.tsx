@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Button,
   DialogActions,
   DialogContent,
-  DialogTitle,
+  Fab,
+  Grid,
+  Paper,
   Slide,
   Typography,
 } from "@mui/material";
@@ -14,18 +16,19 @@ import { Close } from "@mui/icons-material";
 import { useCartContext } from "context/CartContext";
 import { CartItems } from "./CartItems";
 import { useCardContext } from "context/CardContext";
+import { PaySuccess } from "./PaySuccess";
 
-const StyledFab = styled(Button)({
-  borderRadius: "10px",
+export const StyledFab = styled(Fab)({
+  borderRadius: "15px",
 });
 
-const CartDialog = styled(Dialog)(({ theme }) => ({
+export const CartDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialog-container": {
     alignItems: "flex-end",
   },
 }));
 
-const Transition = React.forwardRef(function Transition(
+export const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<any, any>;
   },
@@ -43,8 +46,19 @@ export function CartItemsList(props: CartDialogProps) {
   const { onClose, open } = props;
   const { cartItems, removeCards } = useCartContext();
   const { cardsInfo } = useCardContext();
+  const [openSuccess, setOpenSuccess] = useState<boolean>(false);
   const handleClose = () => {
     onClose("");
+  };
+
+  const handleShowSucess = () => {
+    setOpenSuccess(true);
+    removeCards();
+    onClose("");
+  };
+
+  const handleCloseSuccess = (value: string) => {
+    setOpenSuccess(false);
   };
 
   return (
@@ -54,94 +68,147 @@ export function CartItemsList(props: CartDialogProps) {
         TransitionComponent={Transition}
         keepMounted
         open={open}
-        scroll="paper"
         fullWidth
+        PaperProps={{
+          style: {
+            backgroundColor: "transparent",
+            boxShadow: "none",
+          },
+        }}
       >
-        <DialogTitle id="cart-dialog-title"></DialogTitle>
         {cartItems?.length > 0 ? (
           <>
-            <DialogContent>
-              {(cartItems || []).map((itemInfo: any, index: number) => {
-                return (
-                  <CartItems
-                    key={index}
-                    id={itemInfo?.id}
-                    quantity={itemInfo?.quantity}
-                  />
-                );
-              })}
-            </DialogContent>
-
-            <DialogActions sx={{ margin: "auto" }}>
-              <Button
-                variant="text"
-                onClick={() => {
-                  removeCards();
+            <Paper
+              sx={{
+                maxHeight: 550,
+                overflow: "auto",
+                borderRadius: " 20px 20px 0px 0px",
+              }}
+            >
+              <DialogContent>
+                {(cartItems || []).map((itemInfo: any, index: number) => {
+                  return (
+                    <CartItems
+                      key={index}
+                      id={itemInfo?.id}
+                      quantity={itemInfo?.quantity}
+                    />
+                  );
+                })}
+              </DialogContent>
+            </Paper>
+            <Paper elevation={0} sx={{ borderRadius: "0px 0px 20px 20px" }}>
+              <DialogActions
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  backgroundColor: "transparent",
                 }}
-                sx={{ color: "grey" }}
               >
-                <u>Clear all</u>
-              </Button>
-            </DialogActions>
+                <Button
+                  variant="text"
+                  onClick={() => {
+                    removeCards();
+                  }}
+                  sx={{ color: "grey" }}
+                >
+                  <u>Clear all</u>
+                </Button>
+              </DialogActions>
 
-            <DialogActions sx={{ margin: "auto" }}>
-              <Typography variant="h6" fontWeight="bold">
-                Total cards
-                <span style={{ color: "#fd3734", marginLeft: "99px" }}>
-                  {cartItems.reduce((total, cartItem) => {
-                    return total + cartItem.quantity;
-                  }, 0)}
-                </span>
-              </Typography>
-            </DialogActions>
-
-            <DialogActions sx={{ margin: "auto" }}>
-              <Typography variant="h5" fontWeight="bold">
-                Total price
-                <span style={{ color: "#fd3734", marginLeft: "20px" }}>
-                  $
-                  {cartItems
-                    .reduce((total, cartItem) => {
-                      const item = cardsInfo?.find((i) => i.id === cartItem.id);
-                      return (
-                        total +
-                        (item?.cardmarket?.prices?.trendPrice || 0) *
-                          cartItem.quantity
-                      );
-                    }, 0)
-                    ?.toFixed(2)}
-                </span>
-              </Typography>
-            </DialogActions>
-            <DialogActions sx={{ margin: "auto" }}>
-              <Button
-                onClick={handleClose}
-                color="primary"
-                variant="contained"
-                sx={{ borderRadius: "20px" }}
-                size="large"
+              <DialogActions
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                }}
               >
-                Pay Now
-              </Button>
-            </DialogActions>
+                <Typography variant="h6" fontWeight="bold">
+                  Total cards
+                  <span style={{ color: "#fd3734", marginLeft: "90px" }}>
+                    {cartItems.reduce((total, cartItem) => {
+                      return total + cartItem.quantity;
+                    }, 0)}
+                  </span>
+                </Typography>
+              </DialogActions>
+
+              <DialogActions
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <Typography variant="h5" fontWeight="bold">
+                  Total price
+                  <span style={{ color: "#fd3734", marginLeft: "20px" }}>
+                    $
+                    {cartItems
+                      .reduce((total, cartItem) => {
+                        const item = cardsInfo?.find(
+                          (i) => i.id === cartItem.id
+                        );
+                        return (
+                          total +
+                          (item?.cardmarket?.prices?.trendPrice || 0) *
+                            cartItem.quantity
+                        );
+                      }, 0)
+                      ?.toFixed(2)}
+                  </span>
+                </Typography>
+              </DialogActions>
+              <DialogActions
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <Button
+                  onClick={handleShowSucess}
+                  color="primary"
+                  variant="contained"
+                  sx={{ borderRadius: "20px" }}
+                  size="large"
+                >
+                  Pay Now
+                </Button>
+              </DialogActions>
+              <div style={{ height: "40px" }}></div>
+            </Paper>
           </>
         ) : (
-          <DialogContent>
-            <Typography variant="body1" margin={0} sx={{color : 'grey'}}>There is no selected card in your cart</Typography>
-          </DialogContent>
+          <Paper sx={{borderRadius: '20px'}}>
+            <DialogContent sx={{ height: "200px", margin: "auto" }}>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: "grey",
+                  textAlign: "center",
+                  verticalAlign: "middle",
+                  lineHeight: "150px",
+                }}
+              >
+                There is no selected card in your cart
+              </Typography>
+            </DialogContent>
+          </Paper>
         )}
 
-        <DialogActions sx={{ margin: "auto" }}>
-          <StyledFab
-            autoFocus
-            onClick={handleClose}
-            color="error"
-            variant="contained"
-          >
-            <Close />
-          </StyledFab>
-        </DialogActions>
+        <Grid container spacing={1}>
+          <Grid item xs={12} justifyContent={"center"} display={"flex"}>
+            <StyledFab
+              autoFocus
+              onClick={handleClose}
+              color="error"
+              variant="extended"
+              sx={{ marginTop: "-24px" }}
+            >
+              <Close sx={{ fontSize: "18px", fontWeight: "bold" }} />
+            </StyledFab>
+          </Grid>
+        </Grid>
       </CartDialog>
+      <PaySuccess open={openSuccess} onClose={handleCloseSuccess} />
     </>
   );
 }

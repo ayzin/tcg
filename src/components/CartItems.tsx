@@ -27,14 +27,14 @@ export function CartItems(props: CartItem) {
         <Grid item xs={3}>
           <CardMedia
             component="img"
-            sx={{ width: { xs: 90, md: 120 } }}
+            sx={{ width: { xs: 90, md: 120 }, mt: {xs: 2, md: 0} }}
             image={item?.images?.small}
             alt="Pokemon Card"
           />
         </Grid>
         <Grid item xs={6}>
-          <CardContent>
-            <Typography component="div" variant="h5">
+          <CardContent sx={{ml:2}}>
+            <Typography variant="h6" fontWeight={'bold'}>
               {item?.name}
             </Typography>
             <Typography
@@ -48,14 +48,15 @@ export function CartItems(props: CartItem) {
               <span style={{ color: "#757575" }}>per card</span>
             </Typography>
           </CardContent>
-          <CardContent>
+          <CardContent sx={{ml:2}}>
             <Typography variant="subtitle1" component="div">
               <span style={{ fontWeight: "bold", color: "#fd3734" }}>
-                {item?.set?.total && item?.set?.total > 1
+                {/* {item?.set?.total && item?.set?.total > 1
                   ? item?.set?.total - quantity
-                  : item?.set?.total}
+                  : item?.set?.total} */}
+                {item?.set?.total}
               </span>
-              <span style={{ color: "#c0bfbf" }}>
+              <span style={{ color: "#c0bfbf", fontSize: '13px' }}>
                 {item?.set?.total && item?.set?.total > 1
                   ? " cards left"
                   : " card left"}
@@ -71,7 +72,7 @@ export function CartItems(props: CartItem) {
                 horizontal: "right",
               }}
               badgeContent={
-                <span style={{ display: "flex", flexDirection: "column" }}>
+                <span style={{ display: "flex", flexDirection: "column", cursor: 'pointer' }}>
                   <>
                     {item?.set?.total && item?.set?.total > quantity ? (
                       <KeyboardArrowUpIcon
@@ -81,7 +82,9 @@ export function CartItems(props: CartItem) {
                         }}
                       />
                     ) : (
-                      ""
+                      <KeyboardArrowUpIcon
+                        sx={{ fontSize: "22px", mb: "-8px", color: "grey" }}
+                      />
                     )}
                   </>
 

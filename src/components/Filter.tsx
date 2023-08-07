@@ -1,9 +1,43 @@
-import * as React from "react";
 import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
 import { Autocomplete, Grid, TextField } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
+import { fetchRarities, fetchSets, fetchType } from "services/api/card";
+import { useEffect, useState } from "react";
+import { Set } from "types/set";
 
-export default function Filter() {
+interface Props {
+  setRaritiesId: (id: string) => void;
+  setTypeId: (id: string) => void;
+  setSetId: (id: string) => void;
+  setName: (name: string) => void;
+}
+
+export default function Filter(props: Props) {
+  const {setRaritiesId, setTypeId, setSetId, setName} = props;
+  const [type, setType] = useState<string[]>([]);
+  const [rarities, setRarities] = useState<string[]>([]);
+  const [setList, setSetList] = useState<{ id: string; label: string }[]>([]);
+
+  const { isLoading, data } = useQuery(
+    ["featch_dropdowns"],
+    () => Promise.all([fetchType(), fetchRarities(), fetchSets()]),
+    { keepPreviousData: true }
+  );
+
+  useEffect(() => {
+    if (!isLoading) {
+      setType(data?.[0]?.data ?? []);
+      setRarities(data?.[1]?.data ?? []);
+      if (data?.[2]?.data) {
+        const sets = (data?.[2]?.data || []).map((set: Set) => {
+          return { id: set.id, label: set.name };
+        });
+        setSetList(sets);
+      }
+    }
+  }, [isLoading, data]);
+
   return (
     <Grid container spacing={0} mt={5} mb={2}>
       <Grid item md={2}></Grid>
@@ -24,26 +58,16 @@ export default function Filter() {
                 type="search"
                 placeholder="Name.."
                 inputProps={{ "aria-label": "Name" }}
+                onChange={(event)=> {setName(event.target.value)}}
               />
             </Grid>
-            <Grid item xs={4} md={3}>
+            <Grid item xs={4} md={2.5}>
               <Autocomplete
                 disablePortal
                 id="type"
                 size="small"
-                options={[
-                  "Colorless",
-                  "Darkness",
-                  "Dragon",
-                  "Fairy",
-                  "Fighting",
-                  "Fire",
-                  "Grass",
-                  "Lightning",
-                  "Metal",
-                  "Psychic",
-                  "Water",
-                ]}
+                onChange={(event, value) => {setTypeId(value ?? '')}}
+                options={type}
                 renderInput={(params) => (
                   <TextField {...params} placeholder="Type" />
                 )}
@@ -54,42 +78,20 @@ export default function Filter() {
                 disablePortal
                 id="type"
                 size="small"
-                options={[
-                  "Colorless",
-                  "Darkness",
-                  "Dragon",
-                  "Fairy",
-                  "Fighting",
-                  "Fire",
-                  "Grass",
-                  "Lightning",
-                  "Metal",
-                  "Psychic",
-                  "Water",
-                ]}
+                onChange={(event, value) => setRaritiesId(value ?? '')}
+                options={rarities}
                 renderInput={(params) => (
                   <TextField {...params} placeholder="Rarity" />
                 )}
               />
             </Grid>
-            <Grid item xs={4} md={2.5}>
+            <Grid item xs={4} md={3}>
               <Autocomplete
                 disablePortal
                 id="type"
                 size="small"
-                options={[
-                  "Colorless",
-                  "Darkness",
-                  "Dragon",
-                  "Fairy",
-                  "Fighting",
-                  "Fire",
-                  "Grass",
-                  "Lightning",
-                  "Metal",
-                  "Psychic",
-                  "Water",
-                ]}
+                onChange={(event, value) => setSetId(value ? value.id : '')}
+                options={setList}
                 renderInput={(params) => (
                   <TextField {...params} placeholder="Set" />
                 )}
@@ -119,6 +121,7 @@ export default function Filter() {
                 type="search"
                 placeholder="Name.."
                 inputProps={{ "aria-label": "Name" }}
+                onChange={(event)=> {setName(event.target.value)}}
               />
             </Paper>
           </Grid>
@@ -135,19 +138,8 @@ export default function Filter() {
                 disablePortal
                 id="type"
                 size="small"
-                options={[
-                  "Colorless",
-                  "Darkness",
-                  "Dragon",
-                  "Fairy",
-                  "Fighting",
-                  "Fire",
-                  "Grass",
-                  "Lightning",
-                  "Metal",
-                  "Psychic",
-                  "Water",
-                ]}
+                options={type}
+                onChange={(event, value) => {setTypeId(value ?? '')}}
                 renderInput={(params) => (
                   <TextField {...params} placeholder="Type" />
                 )}
@@ -167,19 +159,8 @@ export default function Filter() {
                 disablePortal
                 id="type"
                 size="small"
-                options={[
-                  "Colorless",
-                  "Darkness",
-                  "Dragon",
-                  "Fairy",
-                  "Fighting",
-                  "Fire",
-                  "Grass",
-                  "Lightning",
-                  "Metal",
-                  "Psychic",
-                  "Water",
-                ]}
+                options={rarities}
+                onChange={(event, value) => setRaritiesId(value ?? '')}
                 renderInput={(params) => (
                   <TextField {...params} placeholder="Rarity" />
                 )}
@@ -199,19 +180,8 @@ export default function Filter() {
                 disablePortal
                 id="type"
                 size="small"
-                options={[
-                  "Colorless",
-                  "Darkness",
-                  "Dragon",
-                  "Fairy",
-                  "Fighting",
-                  "Fire",
-                  "Grass",
-                  "Lightning",
-                  "Metal",
-                  "Psychic",
-                  "Water",
-                ]}
+                options={setList}
+                onChange={(event, value) => setSetId(value ? value.id : '')}
                 renderInput={(params) => (
                   <TextField {...params} placeholder="Set" />
                 )}

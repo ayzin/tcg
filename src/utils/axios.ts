@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { BASE_API } from "./const";
+import { API_KEY, BASE_API } from "./const";
 import { join } from "lodash";
 
 const onSuccessRequest = (response: AxiosResponse) => response.data;
@@ -10,7 +10,7 @@ axios.interceptors.request.use(async (config) => {
 //     "X-Api-Key": `e33ea347-1d63-49f7-8815-b32ff98ce0a2`,
 //   };
 //   config.headers = { ...config.headers, ...headers };
-  config.headers.set("X-Api-Key", `e33ea347-1d63-49f7-8815-b32ff98ce0a2`);
+  config.headers.set("X-Api-Key", API_KEY);
 
 
   if (!config.url?.startsWith("http") && !config.url?.includes(BASE_API)) {
